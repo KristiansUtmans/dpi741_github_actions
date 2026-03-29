@@ -22,16 +22,18 @@ runs:
         repository: mtararujs/python-greetings
         path: python-greetings
 
+    - name: Copy app to persistent location
+      shell: cmd
+      run: |
+        if not exist C:\app\${{ inputs.env-name }} mkdir C:\app\${{ inputs.env-name }}
+        xcopy /E /Y /I python-greetings C:\app\${{ inputs.env-name }}
+
     - name: Create venv and install deps
       shell: cmd
-      working-directory: python-greetings
+      working-directory: C:\app\${{ inputs.env-name }}
       run: |
         python -m venv venv
         venv\Scripts\python -m pip install -r requirements.txt
-
-    - name: Resurrect previous PM2 processes
-      shell: cmd
-      run: pm2 resurrect & set "errorlevel=0"
 
     - name: Stop existing service
       shell: cmd
@@ -39,7 +41,7 @@ runs:
 
     - name: Start service
       shell: cmd
-      working-directory: python-greetings
+      working-directory: C:\app\${{ inputs.env-name }}
       run: pm2 start app.py --name greetings-app-${{ inputs.env-name }} --interpreter venv\Scripts\python -- --port ${{ inputs.port }}
 
     - name: Save PM2 process list

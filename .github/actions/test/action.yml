@@ -19,7 +19,7 @@ runs:
 
     - name: Wait for service to be ready
       shell: cmd
-      run: ping -n 4 127.0.0.1 >nul
+      run: ping -n 6 127.0.0.1 >nul
 
     - name: Verify service is reachable
       shell: cmd
