@@ -13,6 +13,14 @@ runs:
       shell: cmd
       run: echo Running API tests on ${{ inputs.env-name }} environment...
 
+    - name: Resurrect PM2 processes
+      shell: cmd
+      run: pm2 resurrect
+
+    - name: Wait for service to be ready
+      shell: cmd
+      run: ping -n 4 127.0.0.1 >nul
+
     - name: Verify service is reachable
       shell: cmd
       run: pm2 list
