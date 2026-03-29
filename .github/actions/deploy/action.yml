@@ -35,7 +35,11 @@ runs:
         python -m venv venv
         venv\Scripts\python -m pip install -r requirements.txt
 
-    - name: Stop existing service
+    - name: Resurrect previous PM2 processes
+      shell: cmd
+      run: pm2 resurrect & set "errorlevel=0"
+
+    - name: Stop existing service for this env
       shell: cmd
       run: pm2 delete greetings-app-${{ inputs.env-name }} & set "errorlevel=0"
 
@@ -44,13 +48,13 @@ runs:
       working-directory: C:\app\${{ inputs.env-name }}
       run: pm2 start app.py --name greetings-app-${{ inputs.env-name }} --interpreter venv\Scripts\python -- --port ${{ inputs.port }}
 
-    - name: Save PM2 process list
-      shell: cmd
-      run: pm2 save
-
     - name: Wait for service to start
       shell: cmd
-      run: ping -n 6 127.0.0.1 >nul
+      run: ping -n 8 127.0.0.1 >nul
+
+    - name: Save all PM2 processes
+      shell: cmd
+      run: pm2 save
 
     - name: Verify service is running
       shell: cmd
