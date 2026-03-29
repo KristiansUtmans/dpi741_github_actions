@@ -1,0 +1,43 @@
+name: "Deploy"
+description: "Stop existing service and start python-greetings with PM2"
+
+inputs:
+  env-name:
+    description: "Environment name (dev, stg, preprod, prod)"
+    required: true
+  port:
+    description: "Port number for the service"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Print info
+      shell: bash
+      run: echo "Deploying to ${{ inputs.env-name }} environment on port ${{ inputs.port }}..."
+
+    - name: Clone python-greetings
+      uses: actions/checkout@v6
+      with:
+        repository: mtararujs/python-greetings
+        path: python-greetings
+
+    - name: Create venv and install deps
+      shell: bash
+      working-directory: python-greetings
+      run: |
+        python -m venv venv
+        venv/Scripts/python -m pip install -r requirements.txt
+
+    - name: Stop existing service
+      shell: bash
+      run: pm2 delete greetings-app-${{ inputs.env-name }} || true
+
+    - name: Start service
+      shell: bash
+      working-directory: python-greetings
+      run: pm2 start app.py --name greetings-app-${{ inputs.env-name }} --interpreter venv/Scripts/python -- --port ${{ inputs.port }}
+
+    - name: Verify service is running
+      shell: bash
+      run: pm2 list

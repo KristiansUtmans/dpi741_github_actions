@@ -1,0 +1,30 @@
+name: "Run API Tests"
+description: "Clone test framework, install npm deps and run API tests"
+
+inputs:
+  env-name:
+    description: "Environment name (dev, stg, preprod, prod)"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Print info
+      shell: bash
+      run: echo "Running API tests on ${{ inputs.env-name }} environment..."
+
+    - name: Clone test framework
+      uses: actions/checkout@v6
+      with:
+        repository: mtararujs/course-js-api-framework
+        path: course-js-api-framework
+
+    - name: Install npm dependencies
+      shell: bash
+      working-directory: course-js-api-framework
+      run: npm install
+
+    - name: Run API tests
+      shell: bash
+      working-directory: course-js-api-framework
+      run: npm run greetings greetings_${{ inputs.env-name }}

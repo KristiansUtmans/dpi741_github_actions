@@ -1,0 +1,25 @@
+name: "Install Dependencies"
+description: "Clone python-greetings, create venv and install pip dependencies"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Print info
+      shell: bash
+      run: echo "Installing all required dependencies..."
+
+    - name: Clone python-greetings
+      uses: actions/checkout@v6
+      with:
+        repository: mtararujs/python-greetings
+        path: python-greetings
+
+    - name: Create virtual environment
+      shell: bash
+      working-directory: python-greetings
+      run: python -m venv venv
+
+    - name: Install requirements
+      shell: bash
+      working-directory: python-greetings
+      run: venv/Scripts/python -m pip install -r requirements.txt
