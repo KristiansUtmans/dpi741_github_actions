@@ -5,8 +5,8 @@ runs:
   using: "composite"
   steps:
     - name: Print info
-      shell: bash
-      run: echo "Installing all required dependencies..."
+      shell: cmd
+      run: echo Installing all required dependencies...
 
     - name: Clone python-greetings
       uses: actions/checkout@v6
@@ -15,11 +15,11 @@ runs:
         path: python-greetings
 
     - name: Create virtual environment
-      shell: bash
+      shell: cmd
       working-directory: python-greetings
       run: python -m venv venv
 
     - name: Install requirements
-      shell: bash
+      shell: cmd
       working-directory: python-greetings
-      run: venv/Scripts/python -m pip install -r requirements.txt
+      run: venv\Scripts\python -m pip install -r requirements.txt

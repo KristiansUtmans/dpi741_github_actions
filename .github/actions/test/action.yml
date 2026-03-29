@@ -10,8 +10,8 @@ runs:
   using: "composite"
   steps:
     - name: Print info
-      shell: bash
-      run: echo "Running API tests on ${{ inputs.env-name }} environment..."
+      shell: cmd
+      run: echo Running API tests on ${{ inputs.env-name }} environment...
 
     - name: Clone test framework
       uses: actions/checkout@v6
@@ -20,11 +20,11 @@ runs:
         path: course-js-api-framework
 
     - name: Install npm dependencies
-      shell: bash
+      shell: cmd
       working-directory: course-js-api-framework
       run: npm install
 
     - name: Run API tests
-      shell: bash
+      shell: cmd
       working-directory: course-js-api-framework
       run: npm run greetings greetings_${{ inputs.env-name }}
