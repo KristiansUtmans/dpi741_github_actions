@@ -38,6 +38,10 @@ runs:
       working-directory: python-greetings
       run: pm2 start app.py --name greetings-app-${{ inputs.env-name }} --interpreter venv\Scripts\python -- --port ${{ inputs.port }}
 
+    - name: Wait for service to start
+      shell: cmd
+      run: ping -n 6 127.0.0.1 >nul
+
     - name: Verify service is running
       shell: cmd
       run: pm2 list

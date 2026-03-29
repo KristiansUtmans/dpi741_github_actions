@@ -13,6 +13,10 @@ runs:
       shell: cmd
       run: echo Running API tests on ${{ inputs.env-name }} environment...
 
+    - name: Verify service is reachable
+      shell: cmd
+      run: pm2 list
+
     - name: Clone test framework
       uses: actions/checkout@v6
       with:
